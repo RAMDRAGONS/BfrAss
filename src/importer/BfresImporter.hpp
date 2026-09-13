@@ -11,7 +11,7 @@ class Importer;
 namespace bfrass::importer {
 
 // Assimp loader for NintendoWare BFRES model archives (Wii U FRES 3.x/4.x and
-// Switch FRES 0.0 to 10.x), including their embedded BNTX/FTEX textures.
+// Switch FRES 0.x to 10.x), including their embedded BNTX/FTEX textures.
 class BfresImporter : public Assimp::BaseImporter {
 public:
     bool CanRead(const std::string& file, Assimp::IOSystem* io, bool checkSig) const override;

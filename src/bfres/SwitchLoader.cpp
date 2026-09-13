@@ -131,8 +131,8 @@ std::vector<UserData> SwitchLoader::loadUserData(uint64_t array, uint32_t count)
         case UserData::Type::WString:
             for (uint32_t k = 0; k < n; ++k) {
                 const uint64_t s = nx_.ptr(data + 8 * k);
-                // Wide strings carry the same length prefix as narrow ones.
-                ud.strings.push_back(s ? utf16String(reader_, s + 2) : std::string());
+                // The 16 bit length is followed by 2 bytes of padding before the 32 bit characters.
+                ud.strings.push_back(s ? utf32String(reader_, s + 4) : std::string());
             }
             break;
         case UserData::Type::Bytes: {
@@ -169,9 +169,9 @@ void SwitchLoader::load() {
     const uint64_t boneVisDic = nx_.ptr(o + 0x28);
     const uint64_t shapeAnimDic = nx_.ptr(o + 0x38);
     const uint64_t sceneAnimDic = nx_.ptr(o + 0x48);
-    // Before 3.x vertex and index buffers lived in two memory pools, each with its own
+    // Before 1.x vertex and index buffers lived in two memory pools, each with its own
     // pool object and info pointer.
-    const bool splitPools = major() < 3;
+    const bool splitPools = major() < 1;
     const uint64_t poolShift = splitPools ? 0x10 : 0;
     const uint64_t memoryPoolInfo = splitPools ? 0 : nx_.ptr(o + 0x58);
     const uint64_t externalArray = nx_.ptr(o + 0x60 + poolShift);
@@ -269,7 +269,7 @@ void SwitchLoader::loadModel(Model& model, uint64_t o) {
         loadVertexBuffer(vb, vertexArray + uint64_t(i) * vertexSize, i);
         model.vertexBuffers.push_back(std::move(vb));
     }
-    const uint64_t materialSize = major() >= 10 ? 0xB0 : major() == 9 ? 0xA8 : major() < 3 ? 0xB0 : 0xB8;
+    const uint64_t materialSize = major() >= 10 ? 0xB0 : major() == 9 ? 0xA8 : major() < 1 ? 0xB0 : 0xB8;
     for (uint16_t i = 0; i < materialCount; ++i) {
         Material mat;
         if (major() >= 10) {
@@ -643,9 +643,9 @@ void SwitchLoader::loadMaterial(Material& material, uint64_t o) {
     const uint64_t renderInfoArray = nx_.ptr(base + 0x08);
     const uint64_t renderInfoDic = nx_.ptr(base + 0x10);
     const uint64_t shaderAssign = nx_.ptr(base + 0x18);
-    // Before 3.x textures were a single array of name and texture view pairs instead of
+    // Before 1.x textures were a single array of name and texture view pairs instead of
     // separate view and name arrays, so every later field sits 8 bytes earlier.
-    const bool textureRefs = major() < 3;
+    const bool textureRefs = major() < 1;
     const uint64_t t = textureRefs ? base - 0x08 : base;
     const uint64_t textureNameArray = nx_.ptr(textureRefs ? base + 0x20 : base + 0x28);
     const uint64_t samplerInfoArray = nx_.ptr(t + 0x38);

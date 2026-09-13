@@ -23,7 +23,7 @@ const aiImporterDesc kDescription = {
     "NintendoWare BFRES Importer",
     "",
     "",
-    "Wii U (FRES 3.x/4.x) and Switch (FRES 0.0-10.x) models with BNTX/FTEX textures",
+    "Wii U (FRES 3.x/4.x) and Switch (FRES 0.x-10.x) models with BNTX/FTEX textures",
     aiImporterFlags_SupportBinaryFlavour | aiImporterFlags_SupportCompressedFlavour,
     0,
     0,

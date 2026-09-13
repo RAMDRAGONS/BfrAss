@@ -139,7 +139,7 @@ ResFile loadResFile(std::vector<uint8_t> data, const std::string& displayName, c
         file.version = Version::fromNx(bytes.data() + 0x08);
         log.info("FRES Version: {}", file.version.toString());
         const unsigned major = file.version.major;
-        if (major > 10 || (major != 0 && major != 3 && (major < 5 || major == 6 || major == 7))) {
+        if (major > 10 || major == 1 || major == 6 || major == 7) {
             log.warn("Switch BFRES version {} has no verified layout; reading it with the nearest known one",
                      file.version.toString());
         }

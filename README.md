@@ -8,7 +8,7 @@ Supported inputs:
 | Platform | FRES versions | Textures |
 | --- | --- | --- |
 | Wii U (big endian) | 3.x, 4.x | FTEX (GX2 surfaces), `.Tex1`/`.Tex2` companion archives |
-| Switch (little endian) | 0.0.0, 3.x, 5.x to 10.x | embedded BNTX, `.Tex` companion archives, standalone BNTX |
+| Switch (little endian) | 0.x to 5.x, 8.x to 10.x | embedded BNTX, `.Tex` companion archives, standalone BNTX |
 
 Yaz0 compressed files (`.sbfres`, `.szs`) are decompressed transparently.
 

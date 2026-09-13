@@ -7,6 +7,24 @@
 
 namespace bfrass::bfres {
 
+inline void appendUtf8(std::string& utf8, uint32_t cp) {
+    if (cp < 0x80) {
+        utf8.push_back(char(cp));
+    } else if (cp < 0x800) {
+        utf8.push_back(char(0xC0 | (cp >> 6)));
+        utf8.push_back(char(0x80 | (cp & 0x3F)));
+    } else if (cp < 0x10000) {
+        utf8.push_back(char(0xE0 | (cp >> 12)));
+        utf8.push_back(char(0x80 | ((cp >> 6) & 0x3F)));
+        utf8.push_back(char(0x80 | (cp & 0x3F)));
+    } else {
+        utf8.push_back(char(0xF0 | (cp >> 18)));
+        utf8.push_back(char(0x80 | ((cp >> 12) & 0x3F)));
+        utf8.push_back(char(0x80 | ((cp >> 6) & 0x3F)));
+        utf8.push_back(char(0x80 | (cp & 0x3F)));
+    }
+}
+
 // Zero-terminated UTF-16 in the reader's byte order, converted to UTF-8.
 inline std::string utf16String(const BinaryReader& r, uint64_t target) {
     std::string utf8;
@@ -25,21 +43,20 @@ inline std::string utf16String(const BinaryReader& r, uint64_t target) {
                 p += 2;
             }
         }
-        if (cp < 0x80) {
-            utf8.push_back(char(cp));
-        } else if (cp < 0x800) {
-            utf8.push_back(char(0xC0 | (cp >> 6)));
-            utf8.push_back(char(0x80 | (cp & 0x3F)));
-        } else if (cp < 0x10000) {
-            utf8.push_back(char(0xE0 | (cp >> 12)));
-            utf8.push_back(char(0x80 | ((cp >> 6) & 0x3F)));
-            utf8.push_back(char(0x80 | (cp & 0x3F)));
-        } else {
-            utf8.push_back(char(0xF0 | (cp >> 18)));
-            utf8.push_back(char(0x80 | ((cp >> 12) & 0x3F)));
-            utf8.push_back(char(0x80 | ((cp >> 6) & 0x3F)));
-            utf8.push_back(char(0x80 | (cp & 0x3F)));
+        appendUtf8(utf8, cp);
+    }
+    return utf8;
+}
+
+// Zero-terminated UTF-32 in the reader's byte order, converted to UTF-8.
+inline std::string utf32String(const BinaryReader& r, uint64_t target) {
+    std::string utf8;
+    for (uint64_t p = target;; p += 4) {
+        const uint32_t cp = r.u32(p);
+        if (cp == 0) {
+            break;
         }
+        appendUtf8(utf8, cp);
     }
     return utf8;
 }
