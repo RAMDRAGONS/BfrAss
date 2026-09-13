@@ -1,0 +1,35 @@
+# CMake build trees
+/build/
+/build-*/
+/cmake-build-*/
+/out/
+CMakeUserPresets.json
+
+# Symlink to the generated compilation database
+/compile_commands.json
+
+# clangd index
+/.cache/
+
+# Editors and IDEs
+/.vscode/
+/.idea/
+/.vs/
+*.swp
+*~
+
+# Conversion and texture output
+*.bfres
+*.sbfres
+*.bntx
+*.dds
+*.png
+*.glb
+*.gltf
+*.bin
+*.fbx
+*.dae
+*.obj
+*.mtl
+*.assbin
+*.assxml
